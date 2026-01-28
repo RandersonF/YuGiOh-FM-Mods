@@ -1,0 +1,579 @@
+:root {
+  --bg: #0b0f14;
+  --panel: #101825;
+  --muted: #8ea0b8;
+  --text: #e6eefc;
+  --line: #1b2a40;
+  --btn: #1a2639;
+  --btn2: #22314a;
+  --ok: #21c07a;
+  --warn: #f6c445;
+  --bad: #ff5c5c;
+  --chip: #15233a;
+}
+
+* {
+  box-sizing: border-box
+}
+
+html,
+body {
+  height: 100%
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.35 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial;
+}
+
+a {
+  color: #8dc5ff;
+  text-decoration: none
+}
+
+a:hover {
+  text-decoration: underline
+}
+
+header {
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(180deg, #0e1520, #0b0f14);
+}
+
+header h1 {
+  margin: 0 0 6px 0;
+  font-size: 18px
+}
+
+header .sub {
+  color: var(--muted);
+  font-size: 12px
+}
+
+.wrap {
+  padding: 14px 18px;
+  max-width: 1200px;
+  margin: 0 auto
+}
+
+.row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap
+}
+
+.spacer {
+  flex: 1
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.btn {
+  background: var(--btn);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: var(--btn2)
+}
+
+.btn:disabled {
+  opacity: .55;
+  cursor: not-allowed
+}
+
+input[type="text"],
+input[type="number"],
+select {
+  background: #0c1422;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px 10px;
+  outline: none;
+}
+
+label {
+  color: var(--muted);
+  font-size: 12px
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 160px
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #0c1320;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--warn)
+}
+
+.dot.ok {
+  background: var(--ok)
+}
+
+.dot.warn {
+  background: var(--warn)
+}
+
+.dot.bad {
+  background: var(--bad)
+}
+
+.status b {
+  font-weight: 600
+}
+
+.status .msg {
+  color: var(--muted)
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.tab {
+  background: var(--btn);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 8px 12px;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.tab[aria-selected="true"] {
+  background: var(--btn2);
+  border-color: #2d456a;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 980px) {
+  .grid {
+    grid-template-columns: 1fr
+  }
+}
+
+.list {
+  max-height: 65vh;
+  overflow: auto;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+}
+
+.item {
+  padding: 10px 10px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.item:last-child {
+  border-bottom: none
+}
+
+.item:hover {
+  background: #0c1525
+}
+
+.item .id {
+  min-width: 56px;
+  font-variant-numeric: tabular-nums;
+  color: #a7c6ff;
+}
+
+.item .nm {
+  flex: 1
+}
+
+.item .meta {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 2px
+}
+
+.kv {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 8px 12px;
+  margin-top: 10px;
+}
+
+.kv div {
+  padding: 6px 8px;
+  border-radius: 10px
+}
+
+.kv .k {
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.03)
+}
+
+.kv .v {
+  background: rgba(255, 255, 255, 0.02)
+}
+
+.sectionTitle {
+  margin: 14px 0 8px;
+  color: #b9c9e6;
+  font-size: 13px;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+}
+
+.chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap
+}
+
+.chip {
+  background: var(--chip);
+  border: 1px solid var(--line);
+  padding: 6px 8px;
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+}
+
+.table th,
+.table td {
+  padding: 10px 10px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.table th {
+  background: #0c1422;
+  color: #b8c7e5;
+  font-size: 12px;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+}
+
+.table tr:hover td {
+  background: #0c1525
+}
+
+.num {
+  font-variant-numeric: tabular-nums
+}
+
+.small {
+  font-size: 12px;
+  color: var(--muted)
+}
+
+.muted {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+
+/* Paleta (como você ajustou) */
+.attr-dark {
+  background: #D74379;
+}
+
+.attr-divine {
+  background: #ffbb1e;
+}
+
+.attr-earth {
+  background: #502a08;
+}
+
+.attr-fire {
+  background: #FD433D;
+}
+
+.attr-light {
+  background: #dcf8ff;
+}
+
+.attr-water {
+  background: #1CB5E5;
+}
+
+.attr-wind {
+  background: #a3ff74;
+}
+
+
+/* --- Card header polish (chips maiores + destaque no nome) --- */
+#detailMeta .cardTitle {
+  font-size: 20px;
+  font-weight: 750;
+  letter-spacing: .01em;
+  color: var(--text);
+}
+
+#detailMeta .cardSubtitle {
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Chips maiores (Tipo / GS / Attr / Lv) */
+.chips-lg {
+  gap: 10px;
+}
+
+.chips-lg .chip {
+  padding: 8px 12px;
+  font-size: 13px;
+}
+
+/* Tipo: mais legível */
+.chip.type {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* GS: look de medalha (borda + gradiente sutil) */
+.chip.gs {
+  color: var(--text);
+  border-color: rgba(255, 255, 255, 0.22);
+  background:
+    radial-gradient(120% 120% at 30% 20%, rgba(255, 255, 255, 0.20) 0%, rgba(255, 255, 255, 0.06) 40%, rgba(0, 0, 0, 0.0) 70%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(0, 0, 0, 0.10));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.22),
+    0 6px 16px rgba(0, 0, 0, 0.22);
+}
+
+.chip.gs .gs-sym {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.chip.gs .gs-sep {
+  opacity: .55;
+  padding: 0 8px;
+}
+
+/* Atributo: ícone + texto, clean */
+.chip.attr {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  /* default (bom para chips claros) */
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.chip.attr .attr-icon {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chip.attr .attr-icon .icon {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.chip.attr .attr-text {
+  font-weight: 650;
+  letter-spacing: .01em;
+}
+
+/* Contraste por atributo (você já ajustou as cores; aqui só garantimos leitura) */
+.chip.attr.attr-light {
+  color: #0b1b22;
+}
+
+.chip.attr.attr-divine {
+  color: #0b1b22;
+}
+
+.chip.attr.attr-dark {
+  color: #0b1b22;
+}
+
+.chip.attr.attr-earth {
+  color: #fff;
+}
+
+.chip.attr.attr-fire {
+  color: #fff;
+}
+
+.chip.attr.attr-water {
+  color: #0b1b22;
+}
+
+.chip.attr.attr-wind {
+  color: #081017;
+}
+
+/* se quiser branco, troque para #fff */
+
+/* Level: estrelas */
+.chip.lv {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.lv-stars {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.lv-star {
+  width: 18px;
+  height: 18px;
+  display: block;
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.35));
+}
+
+.lv-more {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* --- Subtabs (painel de Duelistas) --- */
+.subtabs {
+  margin-top: 10px;
+  display: inline-flex;
+  gap: 8px;
+  padding: 6px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.subtab {
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-weight: 650;
+  letter-spacing: .01em;
+  cursor: pointer;
+}
+
+.subtab:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.subtab.active {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+/* Badge de contagem nas subtabs */
+.subtab {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.subtab .badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  height: 20px;
+  padding: 0 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 750;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.10);
+}.subtab.active .badge {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+/* --- Micro-polish: highlight suave ao navegar para Duelistas --- */
+@keyframes duelistPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.00);
+    transform: translateZ(0);
+  }
+
+  20% {
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.10), 0 0 0 10px rgba(255, 255, 255, 0.04);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.00);
+  }
+}
+
+.pulse-target {
+  border-radius: 16px;
+  /* combina com seu layout de cards */
+}
+
+.pulse-once {
+  animation: duelistPulse 700ms ease-out 1;
+}
+
+/* Respeita usuários que preferem menos movimento */
+@media (prefers-reduced-motion: reduce) {
+  .pulse-once {
+    animation: none;
+    outline: 2px solid rgba(255, 255, 255, 0.12);
+    outline-offset: 6px;
+  }
+}

@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Yu-Gi-Oh! FM Mods</title>
+
+  <!-- Evita request automático em /favicon.ico -->
+  <link rel="icon" href="data:," />
+
+  <link rel="stylesheet" href="./style.css" />
+  <script src="./app.js" defer></script>
+</head>
+
+<body>
+  <header>
+    <div class="wrap">
+      <h1>Yu-Gi-Oh! FM Mods</h1>
+      <!--<div class="sub">Carrega o <b>cards.json</b>, filtra e inspeciona cartas. Aba “Duelistas” mostra deck e drops por
+        ranking.</div>-->
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="row">
+      <div class="field" style="min-width:320px">
+        <label>Mod</label>
+        <select id="modPick" disabled>
+          <option value="">Carregando mods…</option>
+        </select>
+        <!--<div class="small" id="modHint"></div>-->
+      </div>
+
+      <!--<button id="btnClearCache" class="btn" type="button">Limpar cache</button>-->
+
+      <div class="spacer"></div>
+
+      <div class="status" style="min-width:320px">
+        <span id="statusDot" class="dot warn"></span>
+        <div>
+          <b id="statusTitle">Inicializando…</b><br />
+          <span id="statusText" class="msg">Carregando lista de mods…</span>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="tabs" role="tablist" aria-label="Navegação">
+      <button id="tabCards" class="tab" role="tab" aria-selected="true">Cartas</button>
+      <button id="tabDuelists" class="tab" role="tab" aria-selected="false">Duelistas</button>
+    </div>
+
+    <!-- PANEL: CARTAS -->
+    <section id="panelCards">
+      <div class="card">
+        <div class="row">
+          <div class="field" style="min-width:260px">
+            <label>Nome (contém)</label>
+            <input id="qName" type="text" placeholder="ex.: battleguard" />
+          </div>
+
+          <div class="field" style="min-width:140px">
+            <label>ID</label>
+            <input id="qId" type="number" placeholder="ex.: 12" />
+          </div>
+
+          <div class="field">
+            <label>Tipo</label>
+            <select id="qType"></select>
+          </div>
+
+          <div class="field">
+            <label>Guardian Star</label>
+            <select id="qStar"></select>
+          </div>
+
+          <div class="field">
+            <label>Atributo</label>
+            <select id="qAttr"></select>
+          </div>
+
+          <div class="field">
+            <label>Duelista (drop)</label>
+            <select id="qDuelist"></select>
+          </div>
+
+          <div class="field">
+            <label>Rank (drop)</label>
+            <select id="qDuelRank">
+              <option value="">Todos</option>
+              <option value="0">Deck</option>
+              <option value="1">Z POW</option>
+              <option value="2">S POW</option>
+              <option value="3">S TEC</option>
+            </select>
+          </div>
+        </div>
+        <div class="row" style="margin-top:10px">
+          <div class="small" id="resultMeta">0 resultados</div>
+          <div class="spacer"></div>
+          <button id="btnClear" class="btn" type="button" disabled>Limpar filtros</button>
+        </div>
+      </div>
+
+      <div class="grid" style="margin-top:12px">
+        <div class="card">
+          <div class="sectionTitle">Lista (clique para detalhes)</div>
+          <div id="list" class="list"></div>
+        </div>
+
+        <div class="card">
+          <div class="sectionTitle">Detalhes</div>
+          <div id="detailMeta" class="small">Selecione uma carta na lista.</div>
+          <div id="details"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANEL: DUELISTAS -->
+    <section id="panelDuelists" hidden>
+      <div class="card">
+        <div class="row">
+          <div class="field" style="min-width:360px">
+            <label>Escolha o duelista</label>
+            <select id="duelistPick"></select>
+          </div>
+
+          <label style="display:none; align-items:center; gap:8px; margin-top:18px; user-select:none;">
+            <input id="duelistHideZero" type="checkbox" />
+            <span>Ocultar linhas sem chance (0 / vazio)</span>
+          </label>
+
+          <div class="spacer"></div>
+
+          <div id="duelistMeta" class="small">Selecione um duelista.</div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:12px">
+        <div class="sectionTitle">Cartas do duelista (deck e drops)</div>
+        <div class="subtabs" role="tablist" aria-label="Filtro de cartas do duelista">
+          <button class="subtab active" role="tab" aria-selected="true" data-duel-tab="all" id="duelTabAll"><span
+              class="label">Tudo</span><span class="badge" aria-hidden="true">0</span></button>
+          <button class="subtab" role="tab" aria-selected="false" data-duel-tab="deck" id="duelTabDeck"><span
+              class="label">Deck</span><span class="badge" aria-hidden="true">0</span></button>
+          <button class="subtab" role="tab" aria-selected="false" data-duel-tab="zpow" id="duelTabZ"><span
+              class="label">Z POW</span><span class="badge" aria-hidden="true">0</span></button>
+          <button class="subtab" role="tab" aria-selected="false" data-duel-tab="spow" id="duelTabSP"><span
+              class="label">S POW</span><span class="badge" aria-hidden="true">0</span></button>
+          <button class="subtab" role="tab" aria-selected="false" data-duel-tab="stec" id="duelTabST"><span
+              class="label">S TEC</span><span class="badge" aria-hidden="true">0</span></button>
+        </div>
+        <table class="table">
+          <thead id="duelistThead">
+            <tr>
+              <th style="width:90px">ID</th>
+              <th>Carta</th>
+              <th style="width:120px">Deck</th>
+              <th style="width:110px">Z POW</th>
+              <th style="width:110px">S POW</th>
+              <th style="width:110px">S TEC</th>
+            </tr>
+          </thead>
+          <tbody id="duelistTbody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</body>
+
+</html>
