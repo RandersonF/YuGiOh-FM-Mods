@@ -248,7 +248,7 @@
   function ensureWorker() {
     if (worker) return;
 
-    worker = new Worker("./worker.js", { type: "classic" });
+    worker = new Worker("./worker.js?v=2", { type: "classic" });
 
     worker.onmessage = (ev) => {
       const msg = ev.data;
@@ -337,7 +337,7 @@
   }
 
   async function loadModsManifest() {
-    const res = await fetch("./mods.json");
+    const res = await fetch("./mods.json", { cache: "no-store" });
     if (!res.ok) throw new Error(`Falha ao ler mods.json (HTTP ${res.status})`);
 
     const data = await res.json();
@@ -1158,7 +1158,7 @@
 
   async function loadModsManifest() {
     // 1) busca o manifest (mesma origem do site)
-    const res = await fetch("./mods.json", { cache: "no-store" });
+    const res = await fetch("./mods.json", { cache: "no-store" }); // Garante que o manifest está sempre fresco
     if (!res.ok) throw new Error(`mods.json HTTP ${res.status}`);
 
     const data = await res.json();
