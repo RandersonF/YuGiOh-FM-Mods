@@ -1,0 +1,30 @@
+# ===== OS / editor =====
+.DS_Store
+Thumbs.db
+
+# VS Code (ignora workspace/settings locais)
+.vscode/*
+!.vscode/extensions.json
+
+# ===== Logs =====
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ===== Node / toolchains (se você usar) =====
+node_modules/
+dist/
+build/
+coverage/
+.cache/
+
+# ===== Env / secrets =====
+.env
+.env.*
+*.local
+
+# ===== Optional: artefatos grandes do mod (descomente se quiser) =====
+# mods/**/cards.json
+# mods/**/cards_extraido.json

@@ -1,0 +1,17 @@
+{
+  "mods": [
+    {
+      "id": "rmf",
+      "name": "Remaster Final",
+      "version": "95",
+      "path": "./mods/rmf/cards.json",
+      "default": true
+    },
+    {
+      "id": "classic",
+      "name": "FM Classic",
+      "version": "1",
+      "path": "./mods/classic/cards.json"
+    }
+  ]
+}
