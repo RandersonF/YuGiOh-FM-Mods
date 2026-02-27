@@ -1,13 +1,15 @@
 :root {
-  --bg: #0b0f14;
-  --panel: #101825;
-  --muted: #8ea0b8;
-  --text: #e6eefc;
-  --line: #1b2a40;
-  --btn: #1a2639;
-  --btn2: #22314a;
+  /* FM Theme Palette */
+  --bg: #04060a;
+  --panel: #0e1522;
+  --muted: #7a8ca3;
+  --text: #dce6f2;
+  --line: #23344d;
+  --btn: #162236;
+  --btn2: #253652;
+  --accent: #4da6ff;
   --ok: #21c07a;
-  --warn: #f6c445;
+  --warn: #e6c200; /* Gold */
   --bad: #ff5c5c;
   --chip: #15233a;
 }
@@ -23,13 +25,13 @@ body {
 
 body {
   margin: 0;
-  background: var(--bg);
+  background: radial-gradient(circle at 50% 0%, #131c2e 0%, var(--bg) 80%), var(--bg);
   color: var(--text);
   font: 14px/1.35 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial;
 }
 
 a {
-  color: #8dc5ff;
+  color: var(--accent);
   text-decoration: none
 }
 
@@ -39,12 +41,13 @@ a:hover {
 
 header {
   padding: 16px 18px;
-  border-bottom: 1px solid var(--line);
-  background: linear-gradient(180deg, #0e1520, #0b0f14);
+  border-bottom: 1px solid rgba(77, 166, 255, 0.2);
+  background: rgba(14, 21, 34, 0.8);
+  backdrop-filter: blur(10px);
 }
 
 header h1 {
-  margin: 0 0 6px 0;
+  margin: 0;
   font-size: 18px
 }
 
@@ -72,13 +75,14 @@ header .sub {
 
 .card {
   background: var(--panel);
-  border: 1px solid var(--line);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   border-radius: 12px;
   padding: 12px;
 }
 
 .btn {
-  background: var(--btn);
+  background: linear-gradient(180deg, #253652, #162236);
   color: var(--text);
   border: 1px solid var(--line);
   border-radius: 10px;
@@ -86,7 +90,8 @@ header .sub {
   cursor: pointer;
 }
 
-.btn:hover {
+.btn:hover,
+.btn:focus-visible {
   background: var(--btn2)
 }
 
@@ -98,7 +103,7 @@ header .sub {
 input[type="text"],
 input[type="number"],
 select {
-  background: #0c1422;
+  background: #080d16;
   color: var(--text);
   border: 1px solid var(--line);
   border-radius: 10px;
@@ -164,7 +169,7 @@ label {
 .tab {
   background: var(--btn);
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: 8px;
   padding: 8px 12px;
   cursor: pointer;
   color: var(--text);
@@ -172,7 +177,8 @@ label {
 
 .tab[aria-selected="true"] {
   background: var(--btn2);
-  border-color: #2d456a;
+  border-color: var(--accent);
+  color: #fff;
 }
 
 .grid {
@@ -190,7 +196,7 @@ label {
 .list {
   max-height: 65vh;
   overflow: auto;
-  border-radius: 12px;
+  border-radius: 8px;
   border: 1px solid var(--line);
 }
 
@@ -207,7 +213,7 @@ label {
 }
 
 .item:hover {
-  background: #0c1525
+  background: rgba(77, 166, 255, 0.1);
 }
 
 .item .id {
@@ -224,27 +230,6 @@ label {
   color: var(--muted);
   font-size: 12px;
   margin-top: 2px
-}
-
-.kv {
-  display: grid;
-  grid-template-columns: 160px 1fr;
-  gap: 8px 12px;
-  margin-top: 10px;
-}
-
-.kv div {
-  padding: 6px 8px;
-  border-radius: 10px
-}
-
-.kv .k {
-  color: var(--muted);
-  background: rgba(255, 255, 255, 0.03)
-}
-
-.kv .v {
-  background: rgba(255, 255, 255, 0.02)
 }
 
 .sectionTitle {
@@ -274,7 +259,7 @@ label {
   width: 100%;
   border-collapse: collapse;
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: 8px;
   border: 1px solid var(--line);
 }
 
@@ -287,14 +272,15 @@ label {
 }
 
 .table th {
-  background: #0c1422;
+  background: #080d16;
   color: #b8c7e5;
   font-size: 12px;
   letter-spacing: .02em;
   text-transform: uppercase;
+  border-bottom-color: var(--line);
 }
 
-.table tr:hover td {
+.table tbody tr:hover td {
   background: #0c1525
 }
 
@@ -342,20 +328,106 @@ label {
   background: #a3ff74;
 }
 
-
-/* --- Card header polish (chips maiores + destaque no nome) --- */
-#detailMeta .cardTitle {
-  font-size: 20px;
-  font-weight: 750;
-  letter-spacing: .01em;
-  color: var(--text);
+/* --- FM Card Layout (Retro Modern) --- */
+.fm-card-box {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.4);
 }
 
-#detailMeta .cardSubtitle {
-  margin-top: 2px;
+.fm-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 12px;
+}
+
+.fm-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.fm-body {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 600px) {
+  .fm-body { grid-template-columns: 1fr; }
+}
+
+.fm-img-placeholder {
+  aspect-ratio: 3/4;
+  background: #080c14;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 24px;
+  font-weight: bold;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+}
+
+.fm-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fm-stat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.fm-label {
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.fm-val {
+  font-family: "Georgia", serif; /* Retro feel for numbers */
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.fm-desc {
+  margin-top: 16px;
+  background: rgba(77, 166, 255, 0.05); /* Slight blue tint like game text box */
+  border: 1px solid rgba(77, 166, 255, 0.15);
+  padding: 12px;
+  border-radius: 6px;
+  color: #e0e8f0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.fm-meta-row {
+  margin-top: 12px;
+  display: flex;
+  gap: 16px;
   font-size: 12px;
   color: var(--muted);
+  border-top: 1px solid rgba(255,255,255,0.05);
+  padding-top: 8px;
 }
+
 
 /* Chips maiores (Tipo / GS / Attr / Lv) */
 .chips-lg {
@@ -378,7 +450,7 @@ label {
   color: var(--text);
   border-color: rgba(255, 255, 255, 0.22);
   background:
-    radial-gradient(120% 120% at 30% 20%, rgba(255, 255, 255, 0.20) 0%, rgba(255, 255, 255, 0.06) 40%, rgba(0, 0, 0, 0.0) 70%),
+    radial-gradient(120% 120% at 30% 20%, rgba(255, 215, 0, 0.20) 0%, rgba(255, 255, 255, 0.06) 40%, rgba(0, 0, 0, 0.0) 70%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(0, 0, 0, 0.10));
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.14),
@@ -462,7 +534,7 @@ label {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: var(--text);
+  color: var(--warn); /* Gold stars */
   background: rgba(255, 255, 255, 0.05);
 }
 
@@ -476,7 +548,7 @@ label {
   width: 18px;
   height: 18px;
   display: block;
-  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.35));
+  filter: drop-shadow(0 0 2px rgba(255, 215, 0, 0.5));
 }
 
 .lv-more {
@@ -487,12 +559,12 @@ label {
 /* --- Subtabs (painel de Duelistas) --- */
 .subtabs {
   margin-top: 10px;
-  display: inline-flex;
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   padding: 6px;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 12px;
 }
 
 .subtab {
@@ -501,21 +573,20 @@ label {
   color: var(--muted);
   padding: 8px 12px;
   border-radius: 12px;
-  font-weight: 650;
+  font-weight: 600;
   letter-spacing: .01em;
   cursor: pointer;
 }
 
 .subtab:hover {
   color: var(--text);
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(77, 166, 255, 0.1);
 }
 
 .subtab.active {
-  color: var(--text);
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.12);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  color: #fff;
+  background: var(--btn2);
+  border-color: var(--accent);
 }
 
 /* Badge de contagem nas subtabs */
@@ -538,10 +609,10 @@ label {
   color: var(--text);
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.10);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.10);
-}.subtab.active .badge {
-  background: rgba(255, 255, 255, 0.14);
-  border-color: rgba(255, 255, 255, 0.16);
+}
+.subtab.active .badge {
+  background: var(--accent);
+  color: #000;
 }
 
 /* --- Micro-polish: highlight suave ao navegar para Duelistas --- */

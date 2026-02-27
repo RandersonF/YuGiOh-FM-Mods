@@ -485,49 +485,63 @@
 
   function renderDetails(item, fusionGeneratedBy, fusionGenerates) {
     if (!item) {
-      el.detailMeta.textContent = "Sem detalhes.";
-      el.details.innerHTML = "";
+      el.detailMeta.innerHTML = "";
+      el.details.innerHTML = `<div style="padding:20px; color:var(--muted)">Selecione uma carta para ver os detalhes.</div>`;
       return;
     }
+
+    // Limpa o meta antigo, pois agora o cabeçalho faz parte do card completo
+    el.detailMeta.innerHTML = "";
 
     const c = item.card || {};
     const atk = item.atk ?? 0;
     const def = item.def ?? 0;
-
-    // Cabeçalho: nome em destaque + chips maiores (Tipo, GS, Atributo e Level por estrelas)
-    const cardId = c.Numero ?? "";
-    const cardName = c.Nombre ?? "";
-
-    el.detailMeta.innerHTML = `
-      <div class="cardTitle">${escapeHtml(cardName)}</div>
-      <div class="cardSubtitle">#${escapeHtml(String(cardId))}</div>
-    `;
-
-    const chips = [];
-    if (c.Tipo) chips.push(c.Tipo);
-    if (c.St1 || c.St2) chips.push(`GS: ${c.St1 || "-"} / ${c.St2 || "-"}`);
-    if (c.Atributo != null) chips.push(`Attr: ${ATTR_LABEL[Number(c.Atributo)] ?? c.Atributo}`);
-    if (c.Nivel) chips.push(`Lv: ${c.Nivel}`);
-
-    //${chips.map(x => `<span class="chip">${escapeHtml(x)}</span>`).join("")}
-
     const level = Number(c.Nivel);
-    const html = `
-    <div class="chips"></div>
-      <div class="chips chips-lg">
-        ${c.Tipo ? renderTypeChip(c.Tipo) : ""}
-        ${(c.St1 || c.St2) ? renderGsChip(c.St1, c.St2) : ""}
-        ${(c.Atributo != null) ? renderAttrChip(c.Atributo) : ""}
-        ${(Number.isFinite(level) && level > 0) ? renderLevelChip(level) : ""}
+
+    el.details.innerHTML = `
+      <div class="fm-card-box">
+        <!-- Header: Nome e Atributo -->
+        <div class="fm-header">
+          <div class="fm-title">${escapeHtml(c.Nombre)}</div>
+          <div class="fm-attr">${c.Atributo != null ? renderAttrChip(c.Atributo) : ""}</div>
+        </div>
+
+        <!-- Body: Imagem e Status -->
+        <div class="fm-body">
+          <div class="fm-img-placeholder">
+            <span>${c.Numero}</span>
+          </div>
+          <div class="fm-stats">
+            <div class="fm-stat-row">
+              <span class="fm-label">ATK</span> <span class="fm-val">${atk}</span>
+            </div>
+            <div class="fm-stat-row">
+              <span class="fm-label">DEF</span> <span class="fm-val">${def}</span>
+            </div>
+            <div class="fm-stat-row">
+              <span class="fm-label">Type</span> <span>${c.Tipo ? renderTypeChip(c.Tipo) : "-"}</span>
+            </div>
+            <div class="fm-stat-row">
+              <span class="fm-label">Stars</span> 
+              <span>${(c.St1 || c.St2) ? renderGsChip(c.St1, c.St2) : "-"}</span>
+            </div>
+            <div class="fm-level" style="margin-top:4px">
+              ${(Number.isFinite(level) && level > 0) ? renderLevelChip(level) : ""}
+            </div>
+          </div>
+        </div>
+
+        <!-- Descrição e Meta -->
+        <div class="fm-desc">
+          ${escapeHtml(c.Comentario || "Sem descrição.")}
+          <div class="fm-meta-row">
+            <span>Password: ${escapeHtml(c.Password || "-")}</span>
+            <span>Preço: ${escapeHtml(c.Precio || "-")}</span>
+          </div>
+        </div>
       </div>
 
-      <div class="kv">
-        <div class="k">ATK / DEF</div><div class="v num">${atk} / ${def}</div>
-        <div class="k">Password</div><div class="v num">${escapeHtml(c.Password ?? "")}</div>
-        <div class="k">Preço</div><div class="v num">${escapeHtml(c.Precio ?? "")}</div>
-        <div class="k">Comentário</div><div class="v">${escapeHtml(c.Comentario ?? "")}</div>
-      </div>
-
+      <!-- Tabelas de dados -->
       ${renderDrop(item.drop)}
       ${renderFusionGeneratedBy(fusionGeneratedBy)}
       ${renderFusionGenerates(fusionGenerates)}
@@ -535,8 +549,6 @@
       ${renderRitual(item.ritual)}
       ${renderIni(item.ini)}
     `;
-
-    el.details.innerHTML = html;
 
     // links autoreferenciáveis nos ids de cartas dentro dos detalhes
     el.details.querySelectorAll("a[data-card]").forEach(a => {
@@ -1215,4 +1227,3 @@
       // deixa a UI travada porque não há fonte de dados
     });
 })();
-
