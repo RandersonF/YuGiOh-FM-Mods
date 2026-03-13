@@ -1,6 +1,8 @@
 # ===== OS / editor =====
 .DS_Store
 Thumbs.db
+Desktop.ini
+ehthumbs.db
 
 # VS Code (ignora workspace/settings locais)
 .vscode/*
@@ -8,6 +10,23 @@ Thumbs.db
 
 # Visual Studio
 .vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# JetBrains / workspaces locais
+.idea/
+*.code-workspace
+
+# Arquivos temporarios e sobras de merge/patch
+*.tmp
+*.temp
+*.bak
+*.orig
+*.rej
+*.swp
+*.swo
 
 # ===== Logs =====
 *.log
@@ -28,6 +47,5 @@ coverage/
 .env.*
 *.local
 
-# ===== Optional: artefatos grandes do mod (descomente se quiser) =====
-# mods/**/cards.json
+# ===== Optional: artefatos gerados localmente para mods =====
 # mods/**/cards_extraido.json
