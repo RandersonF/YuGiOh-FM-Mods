@@ -1,21 +1,24 @@
 :root {
-  /* FM Theme Palette */
-  --bg: #04060a;
-  --panel: #0e1522;
-  --muted: #7a8ca3;
-  --text: #dce6f2;
-  --line: #23344d;
-  --btn: #162236;
-  --btn2: #253652;
-  --accent: #4da6ff;
+  /* New "Soft UI" Palette */
+  --bg: #101620;
+  --panel: #19212e;
+  --muted: #8b949e;
+  --text: #c9d1d9;
+  --line: #30363d; /* For subtle separators */
+  --accent: #58a6ff;
   --ok: #21c07a;
-  --warn: #e6c200; /* Gold */
+  --warn: #e6c200;
   --bad: #ff5c5c;
-  --chip: #15233a;
+
+  /* Shadows for Neumorphism */
+  --shadow-dark: rgba(0, 0, 0, 0.4);
+  --shadow-light: rgba(255, 255, 255, 0.05);
 }
 
 * {
-  box-sizing: border-box
+  box-sizing: border-box;
+  /* Smooth transitions for all properties */
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 html,
@@ -25,7 +28,7 @@ body {
 
 body {
   margin: 0;
-  background: radial-gradient(circle at 50% 0%, #131c2e 0%, var(--bg) 80%), var(--bg);
+  background: var(--bg);
   color: var(--text);
   font: 14px/1.35 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial;
 }
@@ -41,9 +44,10 @@ a:hover {
 
 header {
   padding: 16px 18px;
-  border-bottom: 1px solid rgba(77, 166, 255, 0.2);
-  background: rgba(14, 21, 34, 0.8);
+  background: rgba(16, 22, 32, 0.8);
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
 }
 
 header h1 {
@@ -75,40 +79,45 @@ header .sub {
 
 .card {
   background: var(--panel);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 12px;
+  /* Extruded panel effect */
+  box-shadow: 5px 5px 12px var(--shadow-dark), -5px -5px 12px var(--shadow-light);
 }
 
 .btn {
-  background: linear-gradient(180deg, #253652, #162236);
+  background: var(--panel);
   color: var(--text);
-  border: 1px solid var(--line);
-  border-radius: 10px;
+  border: 1px solid transparent;
+  border-radius: 12px;
   padding: 8px 10px;
   cursor: pointer;
+  font-weight: 600;
+  box-shadow: 3px 3px 8px var(--shadow-dark), -3px -3px 8px var(--shadow-light);
 }
 
 .btn:hover,
 .btn:focus-visible {
-  background: var(--btn2)
+  border-color: var(--accent);
+  color: #fff;
 }
 
 .btn:disabled {
-  opacity: .55;
+  opacity: .5;
   cursor: not-allowed
 }
 
 input[type="text"],
 input[type="number"],
 select {
-  background: #080d16;
+  background: var(--bg);
   color: var(--text);
-  border: 1px solid var(--line);
-  border-radius: 10px;
+  border: 1px solid transparent;
+  border-radius: 12px;
   padding: 8px 10px;
   outline: none;
+  /* Inset effect */
+  box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);
 }
 
 label {
@@ -127,10 +136,10 @@ label {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 12px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: #0c1320;
+  padding: 12px;
+  border-radius: 16px;
+  background: var(--panel);
+  box-shadow: 5px 5px 12px var(--shadow-dark), -5px -5px 12px var(--shadow-light);
 }
 
 .dot {
@@ -167,16 +176,16 @@ label {
 }
 
 .tab {
-  background: var(--btn);
-  border: 1px solid var(--line);
-  border-radius: 8px;
+  background: var(--panel);
+  border: 1px solid transparent;
+  border-radius: 12px;
   padding: 8px 12px;
   cursor: pointer;
   color: var(--text);
+  box-shadow: 3px 3px 8px var(--shadow-dark), -3px -3px 8px var(--shadow-light);
 }
 
 .tab[aria-selected="true"] {
-  background: var(--btn2);
   border-color: var(--accent);
   color: #fff;
 }
@@ -196,13 +205,14 @@ label {
 .list {
   max-height: 65vh;
   overflow: auto;
-  border-radius: 8px;
-  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel);
+  box-shadow: inset 4px 4px 10px var(--shadow-dark), inset -4px -4px 10px var(--shadow-light);
+  padding: 8px;
 }
 
 .item {
   padding: 10px 10px;
-  border-bottom: 1px solid var(--line);
   display: flex;
   gap: 10px;
   align-items: flex-start;
@@ -213,7 +223,7 @@ label {
 }
 
 .item:hover {
-  background: rgba(77, 166, 255, 0.1);
+  background: rgba(88, 166, 255, 0.1);
 }
 
 .item .id {
@@ -257,7 +267,7 @@ label {
 
 .chip {
   background: var(--chip);
-  border: 1px solid var(--line);
+  border: 1px solid transparent;
   padding: 6px 8px;
   border-radius: 999px;
   color: var(--muted);
@@ -267,9 +277,10 @@ label {
 .table {
   width: 100%;
   border-collapse: collapse;
-  overflow: hidden;
-  border-radius: 8px;
-  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel);
+  box-shadow: 5px 5px 12px var(--shadow-dark), -5px -5px 12px var(--shadow-light);
+  overflow: hidden; /* To keep border-radius */
 }
 
 .table th,
@@ -281,16 +292,16 @@ label {
 }
 
 .table th {
-  background: #080d16;
+  background: rgba(0,0,0,0.2);
   color: #b8c7e5;
   font-size: 12px;
   letter-spacing: .02em;
   text-transform: uppercase;
-  border-bottom-color: var(--line);
+  border-bottom: 2px solid var(--line);
 }
 
 .table tbody tr:hover td {
-  background: #0c1525
+  background: rgba(88, 166, 255, 0.08);
 }
 
 .num {
@@ -339,12 +350,11 @@ label {
 
 /* --- FM Card Layout (Retro Modern) --- */
 .fm-card-box {
-  background: rgba(0, 0, 0, 0.25);
-  border: 1px solid var(--line);
-  border-radius: 8px;
+  background: var(--panel);
+  border-radius: 16px;
   padding: 16px;
   margin-bottom: 20px;
-  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.4);
+  box-shadow: 5px 5px 12px var(--shadow-dark), -5px -5px 12px var(--shadow-light);
 }
 
 .fm-header {
@@ -352,7 +362,7 @@ label {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--line);
   padding-bottom: 12px;
 }
 
@@ -360,7 +370,7 @@ label {
   font-size: 20px;
   font-weight: 700;
   color: #fff;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .fm-body {
@@ -375,24 +385,22 @@ label {
 
 .fm-img-placeholder {
   aspect-ratio: 3/4;
-  background: #080c14;
-  border: 1px solid var(--line);
-  border-radius: 6px;
+  background: var(--bg);
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--muted);
   font-size: 24px;
   font-weight: bold;
-  box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+  box-shadow: inset 4px 4px 10px var(--shadow-dark), inset -4px -4px 10px var(--shadow-light);
 }
 
 .fm-card-img {
   width: 100%;
   height: auto;
   display: block;
-  border-radius: 6px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  border-radius: 10px;
 }
 
 .fm-stats {
@@ -405,9 +413,10 @@ label {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg);
   padding: 8px 12px;
-  border-radius: 6px;
+  border-radius: 10px;
+  box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
 }
 
 .fm-label {
@@ -426,11 +435,11 @@ label {
 
 .fm-desc {
   margin-top: 16px;
-  background: rgba(77, 166, 255, 0.05); /* Slight blue tint like game text box */
-  border: 1px solid rgba(77, 166, 255, 0.15);
+  background: var(--bg);
   padding: 12px;
-  border-radius: 6px;
+  border-radius: 12px;
   color: #e0e8f0;
+  box-shadow: inset 3px 3px 8px var(--shadow-dark), inset -3px -3px 8px var(--shadow-light);
   font-size: 14px;
   line-height: 1.5;
 }
@@ -441,7 +450,7 @@ label {
   gap: 16px;
   font-size: 12px;
   color: var(--muted);
-  border-top: 1px solid rgba(255,255,255,0.05);
+  border-top: 1px solid var(--line);
   padding-top: 8px;
 }
 
@@ -459,7 +468,8 @@ label {
 /* Tipo: mais legível */
 .chip.type {
   color: var(--text);
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--bg);
+  box-shadow: inset 2px 2px 4px var(--shadow-dark), inset -2px -2px 4px var(--shadow-light);
 }
 
 .type-icon-img {
@@ -472,14 +482,9 @@ label {
 /* GS: look de medalha (borda + gradiente sutil) */
 .chip.gs {
   color: var(--text);
-  border-color: rgba(255, 255, 255, 0.22);
-  background:
-    radial-gradient(120% 120% at 30% 20%, rgba(255, 215, 0, 0.20) 0%, rgba(255, 255, 255, 0.06) 40%, rgba(0, 0, 0, 0.0) 70%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(0, 0, 0, 0.10));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.14),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.22),
-    0 6px 16px rgba(0, 0, 0, 0.22);
+  border-color: transparent;
+  background: var(--panel);
+  box-shadow: 2px 2px 5px var(--shadow-dark), -2px -2px 5px var(--shadow-light);
 }
 
 .chip.gs .gs-sym {
@@ -497,10 +502,8 @@ label {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: #fff;
-  /* default (bom para chips claros) */
-  border-color: rgba(255, 255, 255, 0.18);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  color: #fff; /* Default text color for attributes */
+  box-shadow: 2px 2px 5px var(--shadow-dark), -2px -2px 5px var(--shadow-light);
 }
 
 .chip.attr .attr-icon {
@@ -559,7 +562,8 @@ label {
   align-items: center;
   gap: 8px;
   color: var(--warn); /* Gold stars */
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--panel);
+  box-shadow: 2px 2px 5px var(--shadow-dark), -2px -2px 5px var(--shadow-light);
 }
 
 .lv-stars {
@@ -593,24 +597,25 @@ label {
 
 .subtab {
   border: 1px solid transparent;
-  background: transparent;
+  background: var(--panel);
   color: var(--muted);
   padding: 8px 12px;
-  border-radius: 12px;
+  border-radius: 10px;
   font-weight: 600;
   letter-spacing: .01em;
   cursor: pointer;
+  box-shadow: 3px 3px 6px var(--shadow-dark), -3px -3px 6px var(--shadow-light);
 }
 
 .subtab:hover {
   color: var(--text);
-  background: rgba(77, 166, 255, 0.1);
+  border-color: var(--accent);
 }
 
 .subtab.active {
-  color: #fff;
-  background: var(--btn2);
+  color: var(--accent);
   border-color: var(--accent);
+  box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);
 }
 
 /* Avatar do Duelista no Header */
@@ -618,7 +623,7 @@ label {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  border: 2px solid var(--line);
+  box-shadow: 0 0 0 2px var(--panel), 0 0 0 4px var(--accent);
   object-fit: cover;
 }
 
@@ -643,12 +648,12 @@ label {
   display: flex;
   align-items: center;
   gap: 12px;
-  background: #080d16;
-  border: 1px solid var(--line);
-  border-radius: 10px;
+  background: var(--bg);
+  border: 1px solid transparent;
+  border-radius: 12px;
   padding: 6px 10px;
   cursor: pointer;
-  user-select: none;
+  user-select: none;  
   min-height: 42px;
   color: var(--text);
 }
@@ -671,15 +676,14 @@ label {
   top: 100%;
   left: 0;
   right: 0;
-  background: #0e1522;
-  border: 1px solid var(--line);
-  border-radius: 8px;
+  background: var(--panel);
+  border-radius: 12px;
   margin-top: 6px;
   max-height: 320px;
   overflow-y: auto;
   z-index: 100;
   display: none;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+  box-shadow: 5px 5px 12px var(--shadow-dark), -5px -5px 12px var(--shadow-light);
 }
 
 .custom-options.open {
@@ -692,16 +696,16 @@ label {
   gap: 12px;
   padding: 8px 12px;
   cursor: pointer;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  border-bottom: 1px solid var(--line);
   transition: background 0.1s;
 }
 
 .custom-option:hover {
-  background: rgba(77, 166, 255, 0.15);
+  background: rgba(88, 166, 255, 0.15);
 }
 
 .custom-option.selected {
-  background: var(--btn2);
+  background: var(--accent);
   color: #fff;
 }
 
@@ -730,13 +734,12 @@ label {
   border-radius: 999px;
   font-size: 12px;
   font-weight: 750;
-  color: var(--text);
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.10);
+  color: var(--muted);
+  background: var(--bg);
 }
 .subtab.active .badge {
   background: var(--accent);
-  color: #000;
+  color: var(--bg);
 }
 
 /* --- Micro-polish: highlight suave ao navegar para Duelistas --- */
@@ -747,7 +750,7 @@ label {
   }
 
   20% {
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.10), 0 0 0 10px rgba(255, 255, 255, 0.04);
+    box-shadow: 0 0 0 3px var(--accent), 0 0 0 10px rgba(88, 166, 255, 0.2);
   }
 
   100% {
@@ -768,7 +771,7 @@ label {
 @media (prefers-reduced-motion: reduce) {
   .pulse-once {
     animation: none;
-    outline: 2px solid rgba(255, 255, 255, 0.12);
-    outline-offset: 6px;
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
   }
 }

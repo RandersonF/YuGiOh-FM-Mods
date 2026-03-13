@@ -363,6 +363,7 @@ self.onmessage = (ev) => {
 
       let fusionGeneratedBy = null;
       let fusionGenerates = null;
+      let ritual = null;
 
       if (item) {
         // Fusões que geram esta carta (resultado = id): lista pares {a,b}
@@ -388,9 +389,29 @@ self.onmessage = (ev) => {
             resultName: String(cr.Nombre ?? ""),
           };
         });
+
+        // Rituais: enriquecer com nomes para permitir busca de imagens (thumbs)
+        if (Array.isArray(item.ritual)) {
+          ritual = item.ritual.map(r => {
+            const resolve = (comp) => {
+              const cid = safeCardNo(comp?.id || comp);
+              if (!cid) return { id: "", nombre: "" };
+              const found = byId.get(cid);
+              const name = comp?.nombre || found?.card?.Nombre || "";
+              return { id: cid, nombre: String(name) };
+            };
+            return {
+              Ri: resolve(r.Ri),
+              c1: resolve(r.c1),
+              c2: resolve(r.c2),
+              c3: resolve(r.c3),
+              Rf: resolve(r.Rf)
+            };
+          });
+        }
       }
 
-      post("details", { item, fusionGeneratedBy, fusionGenerates });
+      post("details", { item, fusionGeneratedBy, fusionGenerates, ritual });
       return;
     }
 

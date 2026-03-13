@@ -2,8 +2,8 @@
   "mods": [
     {
       "id": "rmf",
-      "name": "Remaster Final",
-      "version": "95",
+      "name": "Remaster",
+      "version": "02",
       "path": "./mods/rmf/cards.json",
       "default": true,
       "typeOverrides": {
@@ -13,7 +13,7 @@
     },
     {
       "id": "classic",
-      "name": "FM Classic",
+      "name": "FM Original",
       "version": "1",
       "path": "./mods/classic/cards.json"
     }

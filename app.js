@@ -109,15 +109,14 @@
   function getCardImgUrl(id, name) {
     // Ex: ./mods/rmf/assets/cards/card_images/001_Blue_Eyes_White_Dragon.bmp
     const idStr = String(id).padStart(3, "0");
-    // Substitui espaços e hífens por underscore, remove caracteres especiais
-    const safeName = String(name || "").trim().replace(/[\s-]+/g, "_").replace(/[^a-zA-Z0-9_]/g, "");
+    const safeName = String(name || "").trim().replace(/[\s-&']+/g, "_").replace(/[^a-zA-Z0-9_]/g, "");
     return `${getModBasePath()}assets/cards/card_images/${idStr}_${safeName}.bmp`;
   }
 
   function getCardThumbUrl(id, name) {
     // Ex: ./mods/rmf/assets/cards/card_thumbs/001_Blue_Eyes_White_Dragon.bmp
     const idStr = String(id).padStart(3, "0");
-    const safeName = String(name || "").trim().replace(/[\s-]+/g, "_").replace(/[^a-zA-Z0-9_]/g, "");
+    const safeName = String(name || "").trim().replace(/[\s-&']+/g, "_").replace(/[^a-zA-Z0-9_]/g, "");
     return `${getModBasePath()}assets/cards/card_thumbs/${idStr}_${safeName}.bmp`;
   }
 
@@ -387,7 +386,7 @@
       }
 
       if (msg.type === "details") {
-        renderDetails(msg.item, msg.fusionGeneratedBy, msg.fusionGenerates);
+        renderDetails(msg.item, msg.fusionGeneratedBy, msg.fusionGenerates, msg.ritual);
         return;
       }
 
@@ -670,7 +669,7 @@
     }
   }
 
-  function renderDetails(item, fusionGeneratedBy, fusionGenerates) {
+  function renderDetails(item, fusionGeneratedBy, fusionGenerates, ritual) {
     if (!item) {
       el.detailMeta.innerHTML = "";
       el.details.innerHTML = `<div style="padding:20px; color:var(--muted)">Selecione uma carta para ver os detalhes.</div>`;
@@ -681,6 +680,10 @@
     el.detailMeta.innerHTML = "";
 
     const c = item.card || {};
+    // Debug: ajuda a verificar se o campo 'ComentarioPtBr' está realmente chegando do JSON
+    console.log("Dados da carta selecionada:", c);
+
+    const translation = c.ComentarioPtBr || c.ComentarioPT || c.comentarioPtBr || "";
     const atk = item.atk ?? 0;
     const def = item.def ?? 0;
     const level = Number(c.Nivel);
@@ -724,7 +727,11 @@
 
         <!-- Descrição e Meta -->
         <div class="fm-desc">
-          ${escapeHtml(c.Comentario || "Sem descrição.")}
+          ${escapeHtml(c.Comentario || "")}
+          ${translation ? `<div style="margin-top:12px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.15)">
+            <div class="fm-label" style="margin-bottom:4px; color:var(--accent)">Tradução</div>
+            ${escapeHtml(translation)}
+          </div>` : ""}
           <div class="fm-meta-row">
             <span>Password: ${escapeHtml(c.Password || "-")}</span>
             <span>Preço: ${escapeHtml(c.Precio || "-")}</span>
@@ -736,8 +743,8 @@
       ${renderDrop(item.drop)}
       ${renderFusionGeneratedBy(fusionGeneratedBy)}
       ${renderFusionGenerates(fusionGenerates)}
+      ${renderRitual(ritual || item.ritual)}
       ${renderEquipos(item.equipos)}
-      ${renderRitual(item.ritual)}
       ${renderIni(item.ini)}
     `;
 
@@ -917,26 +924,46 @@
   function renderRitual(arr) {
     if (!Array.isArray(arr) || !arr.length) return "";
     const rows = arr.map(r => {
-      const ri = r?.Ri?.id ?? "";
-      const rf = r?.Rf?.id ?? "";
-      const c1 = r?.c1?.id ?? "";
-      const c2 = r?.c2?.id ?? "";
-      const c3 = r?.c3?.id ?? "";
+      const makeCell = (c) => {
+        const id = c?.id ?? "";
+        if (!id) return `<td class="num">-</td>`;
+        const thumb = getCardThumbUrl(id, c?.nombre);
+        return `<td>
+          <div style="display:flex; align-items:center; gap:6px">
+            <img src="${escapeHtml(thumb)}" class="list-thumb" style="width:28px; height:38px" alt="" onerror="this.style.display='none'" />
+            <a href="#${id}" data-card="${id}">${escapeHtml(String(id))}</a>
+          </div>
+        </td>`;
+      };
+
+      const makeMainCell = (c) => {
+        const id = c?.id ?? "";
+        const name = c?.nombre ?? "";
+        const thumb = getCardThumbUrl(id, name);
+        return `<td>
+          <div style="display:flex; align-items:center; gap:8px">
+            <img src="${escapeHtml(thumb)}" class="list-thumb" style="width:28px; height:38px" alt="" onerror="this.style.display='none'" />
+            <div>
+              <a href="#${id}" data-card="${id}">${escapeHtml(String(id))}</a><br/>
+              <span class="small">${escapeHtml(name)}</span>
+            </div>
+          </div>
+        </td>`;
+      };
+
       return `<tr>
-        <td class="num"><a href="#${ri}" data-card="${ri}">${escapeHtml(String(ri))}</a></td>
-        <td>${escapeHtml(String(r?.Ri?.nombre ?? ""))}</td>
-        <td class="num"><a href="#${c1}" data-card="${c1}">${escapeHtml(String(c1))}</a></td>
-        <td class="num"><a href="#${c2}" data-card="${c2}">${escapeHtml(String(c2))}</a></td>
-        <td class="num"><a href="#${c3}" data-card="${c3}">${escapeHtml(String(c3))}</a></td>
-        <td class="num"><a href="#${rf}" data-card="${rf}">${escapeHtml(String(rf))}</a></td>
-        <td>${escapeHtml(String(r?.Rf?.nombre ?? ""))}</td>
+        ${makeMainCell(r?.Ri)}
+        ${makeCell(r?.c1)}
+        ${makeCell(r?.c2)}
+        ${makeCell(r?.c3)}
+        ${makeMainCell(r?.Rf)}
       </tr>`;
     }).join("");
 
     return `
       <div class="sectionTitle">Rituais</div>
       <table class="table">
-        <thead><tr><th>Ritual</th><th>Nome</th><th>C1</th><th>C2</th><th>C3</th><th>Resultado</th><th>Nome</th></tr></thead>
+        <thead><tr><th>Ritual</th><th>C1</th><th>C2</th><th>C3</th><th>Resultado</th></tr></thead>
         <tbody>${rows}</tbody>
       </table>
     `;
