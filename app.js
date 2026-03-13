@@ -34,6 +34,7 @@
 
     // duelists UI
     duelistPick: $("duelistPick"),
+    duelistPickContainer: $("duelistPickContainer"),
     duelistHideZero: $("duelistHideZero"),
     duelistThead: $("duelistThead"),
     duelistMeta: $("duelistMeta"),
@@ -96,8 +97,94 @@
     return String(name || "").trim().toLowerCase().replaceAll("/", "-").replaceAll(" ", "-");
   }
 
+  // --- Image Path Helpers ---
+
+  function getModBasePath() {
+    // Se currentMod.path for "./mods/rmf/cards.json", retorna "./mods/rmf/"
+    if (!currentMod || !currentMod.path) return "";
+    const path = currentMod.path;
+    return path.substring(0, path.lastIndexOf("/") + 1);
+  }
+
+  function getCardImgUrl(id, name) {
+    // Ex: ./mods/rmf/assets/cards/card_images/001_Blue_Eyes_White_Dragon.bmp
+    const idStr = String(id).padStart(3, "0");
+    // Substitui espaços e hífens por underscore, remove caracteres especiais
+    const safeName = String(name || "").trim().replace(/[\s-]+/g, "_").replace(/[^a-zA-Z0-9_]/g, "");
+    return `${getModBasePath()}assets/cards/card_images/${idStr}_${safeName}.bmp`;
+  }
+
+  function getCardThumbUrl(id, name) {
+    // Ex: ./mods/rmf/assets/cards/card_thumbs/001_Blue_Eyes_White_Dragon.bmp
+    const idStr = String(id).padStart(3, "0");
+    const safeName = String(name || "").trim().replace(/[\s-]+/g, "_").replace(/[^a-zA-Z0-9_]/g, "");
+    return `${getModBasePath()}assets/cards/card_thumbs/${idStr}_${safeName}.bmp`;
+  }
+
+  function getDuelistImgUrl(id) {
+    // Ex: ./mods/rmf/assets/character_icons/char_icon_00.bmp
+    const idStr = String(id).padStart(2, "0");
+    return `${getModBasePath()}assets/character_icons/char_icon_${idStr}.bmp`;
+  }
+
+  // Mapeamento manual para garantir que "Dragon" vire "01_Dragon.bmp" na pasta certa
+  const TYPE_ASSETS = {
+    "Dragon": { file: "01_Dragon.bmp", folder: "monster_type_icons" },
+    "Spellcaster": { file: "02_Spellcaster.bmp", folder: "monster_type_icons" },
+    "Zombie": { file: "03_Zombie.bmp", folder: "monster_type_icons" },
+    "Warrior": { file: "04_Warrior.bmp", folder: "monster_type_icons" },
+    "BeastWarrior": { file: "05_BeastWarrior.bmp", folder: "monster_type_icons" },
+    "Beast-Warrior": { file: "05_BeastWarrior.bmp", folder: "monster_type_icons" }, // Alias comum
+    "Beast": { file: "06_Beast.bmp", folder: "monster_type_icons" },
+    "WingedBeast": { file: "07_WingedBeast.bmp", folder: "monster_type_icons" },
+    "Winged Beast": { file: "07_WingedBeast.bmp", folder: "monster_type_icons" }, // Alias comum
+    "Fiend": { file: "08_Fiend.bmp", folder: "monster_type_icons" },
+    "Fairy": { file: "09_Fairy.bmp", folder: "monster_type_icons" },
+    "Insect": { file: "10_Insect.bmp", folder: "monster_type_icons" },
+    "Dinosaur": { file: "11_Dinosaur.bmp", folder: "monster_type_icons" },
+    "Reptile": { file: "12_Reptile.bmp", folder: "monster_type_icons" },
+    "Fish": { file: "13_Fish.bmp", folder: "monster_type_icons" },
+    "SeaSerpent": { file: "14_SeaSerpent.bmp", folder: "monster_type_icons" },
+    "Sea Serpent": { file: "14_SeaSerpent.bmp", folder: "monster_type_icons" }, // Alias comum
+    "Divine-Beast": { file: "14_SeaSerpent.bmp", folder: "monster_type_icons" },
+    "DivineBeast": { file: "14_SeaSerpent.bmp", folder: "monster_type_icons" },
+    "Machine": { file: "15_Machine.bmp", folder: "monster_type_icons" },
+    "Thunder": { file: "16_Thunder.bmp", folder: "monster_type_icons" },
+    "Aqua": { file: "17_Aqua.bmp", folder: "monster_type_icons" },
+    "Pyro": { file: "18_Pyro.bmp", folder: "monster_type_icons" },
+    "Rock": { file: "19_Rock.bmp", folder: "monster_type_icons" },
+    "Plant": { file: "20_Plant.bmp", folder: "monster_type_icons" },
+    "Magic": { file: "21_Spell.bmp", folder: "type_icons_all" },
+    "Spell": { file: "21_Spell.bmp", folder: "type_icons_all" },
+    "Trap": { file: "22_Trap.bmp", folder: "type_icons_all" },
+    "Ritual": { file: "23_Ritual.bmp", folder: "type_icons_all" },
+    "Equip": { file: "24_Equip.bmp", folder: "type_icons_all" }
+  };
+
+  function getTypeIconUrl(typeName) {
+    const key = String(typeName || "").trim();
+    // Tenta achar direto ou case-insensitive
+    const entry = TYPE_ASSETS[key] || TYPE_ASSETS[Object.keys(TYPE_ASSETS).find(k => k.toLowerCase() === key.toLowerCase())];
+
+    if (entry) {
+      return `${getModBasePath()}assets/${entry.folder}/${entry.file}`;
+    }
+    // Fallback genérico se não achar no mapa
+    return `${getModBasePath()}assets/type_icons_all/${slugAttr(typeName)}.bmp`;
+  }
+
+  function getDisplayType(type) {
+    if (currentMod && currentMod.typeOverrides && currentMod.typeOverrides[type]) {
+      return currentMod.typeOverrides[type];
+    }
+    return type;
+  }
+
   function renderTypeChip(type) {
-    return `<span class="chip type">${escapeHtml(String(type))}</span>`;
+    const display = getDisplayType(type);
+    const iconUrl = getTypeIconUrl(display);
+    // Tenta carregar ícone, se falhar (onerror) esconde a imagem
+    return `<span class="chip type"><img src="${escapeHtml(iconUrl)}" class="type-icon-img" alt="" onerror="this.style.display='none'" /> ${escapeHtml(String(display))}</span>`;
   }
 
   function renderGsChip(st1, st2) {
@@ -236,6 +323,14 @@
     // 2) seleciona o duelista no combo (se existir)
     el.duelistPick.value = String(id);
 
+    // 3) Atualiza o visual do Custom Select (se existir)
+    const trigger = el.duelistPickContainer?.querySelector(".custom-select-trigger");
+    if (trigger) {
+      // Busca o nome no option nativo, já que não temos a lista completa aqui fácil
+      const opt = el.duelistPick.querySelector(`option[value="${id}"]`);
+      if (opt) updateTriggerVisual(id, opt.textContent.split(" - ")[1] || opt.textContent);
+    }
+
     // 3) carrega tabela do duelista
     requestDuelistCards();
 
@@ -266,7 +361,7 @@
         setControlsEnabled(true);
 
         const payload = msg.payload || {};
-        fillSelect(el.qType, payload.types);
+        fillSelect(el.qType, payload.types, (t) => getDisplayType(t));
         fillSelect(el.qStar, payload.stars);
 
         // Atributos fixos
@@ -279,6 +374,7 @@
         // Duelistas (filtro e aba)
         fillSelect(el.qDuelist, payload.duelists, d => `${d.id} - ${d.name}`);
         fillSelect(el.duelistPick, payload.duelists, d => `${d.id} - ${d.name}`);
+        setupCustomDuelistSelect(payload.duelists);
 
         // primeira lista
         runQuery();
@@ -310,6 +406,85 @@
       setStatus("error", "Erro", "Falha no worker.");
       console.error(e);
     };
+  }
+
+  // --- Custom Duelist Select (Visual) ---
+  function setupCustomDuelistSelect(duelists) {
+    if (!el.duelistPickContainer) return;
+
+    // Remove UI anterior se houver (para recargas)
+    const oldTrigger = el.duelistPickContainer.querySelector(".custom-select-trigger");
+    const oldOptions = el.duelistPickContainer.querySelector(".custom-options");
+    if (oldTrigger) oldTrigger.remove();
+    if (oldOptions) oldOptions.remove();
+
+    // Esconde o nativo
+    el.duelistPick.style.display = "none";
+
+    // Cria elementos
+    const trigger = document.createElement("div");
+    trigger.className = "custom-select-trigger";
+    trigger.innerHTML = `<span>Selecione...</span>`;
+
+    const optionsList = document.createElement("div");
+    optionsList.className = "custom-options";
+
+    // Popula opções
+    duelists.forEach(d => {
+      const opt = document.createElement("div");
+      opt.className = "custom-option";
+      opt.dataset.value = d.id;
+      
+      const imgUrl = getDuelistImgUrl(d.id);
+      opt.innerHTML = `
+        <img src="${escapeHtml(imgUrl)}" alt="" onerror="this.style.display='none'" />
+        <span>${d.id} - ${escapeHtml(d.name)}</span>
+      `;
+
+      opt.addEventListener("click", () => {
+        // Fecha
+        optionsList.classList.remove("open");
+        // Atualiza nativo e dispara change
+        el.duelistPick.value = d.id;
+        el.duelistPick.dispatchEvent(new Event("change"));
+        // Atualiza visual do trigger
+        updateTriggerVisual(d.id, d.name);
+      });
+
+      optionsList.appendChild(opt);
+    });
+
+    // Toggle abrir/fechar
+    trigger.addEventListener("click", (e) => {
+      e.stopPropagation(); // evita fechar imediatamente
+      optionsList.classList.toggle("open");
+    });
+
+    // Fechar ao clicar fora
+    document.addEventListener("click", (e) => {
+      if (!el.duelistPickContainer.contains(e.target)) {
+        optionsList.classList.remove("open");
+      }
+    });
+
+    el.duelistPickContainer.appendChild(trigger);
+    el.duelistPickContainer.appendChild(optionsList);
+
+    // Sincroniza estado inicial (se houver valor)
+    if (el.duelistPick.value) {
+      const d = duelists.find(x => String(x.id) === el.duelistPick.value);
+      if (d) updateTriggerVisual(d.id, d.name);
+    }
+  }
+
+  function updateTriggerVisual(id, name) {
+    const trigger = el.duelistPickContainer.querySelector(".custom-select-trigger");
+    if (!trigger) return;
+    const imgUrl = getDuelistImgUrl(id);
+    trigger.innerHTML = `
+      <img src="${escapeHtml(imgUrl)}" alt="" onerror="this.style.display='none'" />
+      <span>${id} - ${escapeHtml(name)}</span>
+    `;
   }
 
   // ---- Mods ----
@@ -360,6 +535,12 @@
     el.modPick.value = chosen.id;
 
     return chosen;
+  }
+
+  function updateModHint(mod) {
+    if (!el.modHint) return;
+    if (!mod) { el.modHint.textContent = ""; return; }
+    el.modHint.textContent = `${mod.version ? `v${mod.version}` : ""} ${mod.path ? `• ${mod.path}` : ""}`.trim();
   }
 
   async function loadMod(modId) {
@@ -460,12 +641,14 @@
 
     for (const it of items) {
       const row = document.createElement("div");
+      const thumbUrl = getCardThumbUrl(it.id, it.name);
       row.className = "item";
       row.innerHTML = `
         <div class="id"><a href="#${it.id}" data-card="${it.id}">${it.id}</a></div>
+        <img src="${escapeHtml(thumbUrl)}" class="list-thumb" alt="" loading="lazy" onerror="this.style.display='none'" />
         <div class="nm">
           <div><a href="#${it.id}" data-card="${it.id}">${escapeHtml(it.name)}</a></div>
-          <div class="meta">${escapeHtml(it.type)} • ${escapeHtml(gsSymbol(it.st1))} ${escapeHtml(gsSymbol(it.st2))} • ${escapeHtml(attrName(it.attr) || "-")}</div>
+          <div class="meta">${escapeHtml(getDisplayType(it.type))} • ${escapeHtml(gsSymbol(it.st1))} ${escapeHtml(gsSymbol(it.st2))} • ${escapeHtml(attrName(it.attr) || "-")}</div>
         </div>
       `;
       row.querySelectorAll("a[data-card]").forEach(a => {
@@ -497,6 +680,7 @@
     const atk = item.atk ?? 0;
     const def = item.def ?? 0;
     const level = Number(c.Nivel);
+    const imgUrl = getCardImgUrl(c.Numero, c.Nombre);
 
     el.details.innerHTML = `
       <div class="fm-card-box">
@@ -509,7 +693,10 @@
         <!-- Body: Imagem e Status -->
         <div class="fm-body">
           <div class="fm-img-placeholder">
-            <span>${c.Numero}</span>
+            <!-- Imagem principal. Se der erro, esconde ela e mostra o span com ID -->
+            <img src="${escapeHtml(imgUrl)}" class="fm-card-img" alt="${escapeHtml(c.Nombre)}" 
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block'" />
+            <span style="display:none">#${c.Numero}</span>
           </div>
           <div class="fm-stats">
             <div class="fm-stat-row">
@@ -585,13 +772,14 @@
         const prob = String(d.prob ?? "");
         const did = String(d.id);
         const dname = String(d.nombre ?? "");
+        const iconUrl = getDuelistImgUrl(did);
 
         return `<tr>
   <td class="num">
     <a href="#duelist-${escapeHtml(did)}" data-duelist="${escapeHtml(did)}">${escapeHtml(did)}</a>
   </td>
   <td>
-    <a href="#duelist-${escapeHtml(did)}" data-duelist="${escapeHtml(did)}">${escapeHtml(dname)}</a>
+    <a href="#duelist-${escapeHtml(did)}" data-duelist="${escapeHtml(did)}" style="display:flex; align-items:center; gap:8px"><img src="${escapeHtml(iconUrl)}" class="duelist-icon-small" alt="" onerror="this.style.display='none'" /> ${escapeHtml(dname)}</a>
   </td>
   <td class="num">${escapeHtml(rankText)}</td>
   <td class="num">${escapeHtml(prob)}</td>
@@ -616,11 +804,23 @@
     const rows = arr.map(x => {
       const a = x?.aId ?? "";
       const b = x?.bId ?? "";
+      const thumbA = getCardThumbUrl(a, x?.aName);
+      const thumbB = getCardThumbUrl(b, x?.bName);
       return `<tr>
         <td class="num"><a href="#${a}" data-card="${a}">${escapeHtml(String(a))}</a></td>
-        <td>${escapeHtml(String(x?.aName ?? ""))}</td>
+        <td>
+          <div style="display:flex; align-items:center; gap:8px">
+            <img src="${escapeHtml(thumbA)}" class="list-thumb" style="width:30px; height:40px" alt="" onerror="this.style.display='none'" />
+            ${escapeHtml(String(x?.aName ?? ""))}
+          </div>
+        </td>
         <td class="num"><a href="#${b}" data-card="${b}">${escapeHtml(String(b))}</a></td>
-        <td>${escapeHtml(String(x?.bName ?? ""))}</td>
+        <td>
+          <div style="display:flex; align-items:center; gap:8px">
+            <img src="${escapeHtml(thumbB)}" class="list-thumb" style="width:30px; height:40px" alt="" onerror="this.style.display='none'" />
+            ${escapeHtml(String(x?.bName ?? ""))}
+          </div>
+        </td>
       </tr>`;
     }).join("");
 
@@ -641,11 +841,23 @@
     const rows = arr.map(x => {
       const w = x?.withId ?? "";
       const r = x?.resultId ?? "";
+      const thumbW = getCardThumbUrl(w, x?.withName);
+      const thumbR = getCardThumbUrl(r, x?.resultName);
       return `<tr>
         <td class="num"><a href="#${w}" data-card="${w}">${escapeHtml(String(w))}</a></td>
-        <td>${escapeHtml(String(x?.withName ?? ""))}</td>
+        <td>
+          <div style="display:flex; align-items:center; gap:8px">
+            <img src="${escapeHtml(thumbW)}" class="list-thumb" style="width:30px; height:40px" alt="" onerror="this.style.display='none'" />
+            ${escapeHtml(String(x?.withName ?? ""))}
+          </div>
+        </td>
         <td class="num"><a href="#${r}" data-card="${r}">${escapeHtml(String(r))}</a></td>
-        <td>${escapeHtml(String(x?.resultName ?? ""))}</td>
+        <td>
+          <div style="display:flex; align-items:center; gap:8px">
+            <img src="${escapeHtml(thumbR)}" class="list-thumb" style="width:30px; height:40px" alt="" onerror="this.style.display='none'" />
+            ${escapeHtml(String(x?.resultName ?? ""))}
+          </div>
+        </td>
       </tr>`;
     }).join("");
 
@@ -904,24 +1116,41 @@
       stec: "S TEC",
     })[duelTab] || "Tudo";
 
-    el.duelistMeta.textContent =
-      `${payload.id} - ${payload.name} • Total: ${totalAll} • Deck: ${totalDeck} • Z: ${totalZ} • S POW: ${totalSP} • S TEC: ${totalST}`;
+    // Header do Duelista com Avatar
+    const avatarUrl = getDuelistImgUrl(payload.id);
+    
+    el.duelistMeta.innerHTML = `
+      <div style="display:flex; align-items:center; gap:12px;">
+        <img src="${escapeHtml(avatarUrl)}" class="duelist-avatar" alt="" onerror="this.style.display='none'" />
+        <div>
+          <div style="font-size:16px; font-weight:bold; color:#fff">${payload.id} - ${escapeHtml(payload.name)}</div>
+          <div class="muted" style="margin-top:4px">Total: ${totalAll} • Deck: ${totalDeck} • Drops: ${totalZ + totalSP + totalST}</div>
+        </div>
+      </div>
+    `;
 
     // Badges nas subtabs (sempre refletem o total do duelista, não o filtro atual)
     updateDuelTabBadges({ totalAll, totalDeck, totalZ, totalSP, totalST });
 
     // Render
     if (duelTab === "all") {
-      el.duelistTbody.innerHTML = viewRows.map(r => `
+      el.duelistTbody.innerHTML = viewRows.map(r => {
+        const thumbUrl = getCardThumbUrl(r.id, r.name);
+        return `
         <tr>
           <td class="num"><a href="#${r.id}" data-card="${r.id}">${r.id}</a></td>
-          <td>${escapeHtml(r.name || "")}</td>
+          <td>
+            <div style="display:flex; align-items:center; gap:8px">
+              <img src="${escapeHtml(thumbUrl)}" class="list-thumb" style="width:30px; height:40px" alt="" onerror="this.style.display='none'" />
+              ${escapeHtml(r.name || "")}
+            </div>
+          </td>
           <td>${escapeHtml(deckFlag(r.r0))}</td>
           <td class="num">${escapeHtml(String(r.r1 || ""))}</td>
           <td class="num">${escapeHtml(String(r.r2 || ""))}</td>
           <td class="num">${escapeHtml(String(r.r3 || ""))}</td>
         </tr>
-      `).join("");
+      `}).join("");
     } else {
       const labelField = tabField || "r0";
       el.duelistTbody.innerHTML = viewRows.map(r => {
@@ -932,11 +1161,17 @@
 
         // deck não precisa ser numérico, então removi class="num" nesse caso
         const tdClass = (duelTab === "deck") ? "" : ' class="num"';
+        const thumbUrl = getCardThumbUrl(r.id, r.name);
 
         return `
       <tr>
         <td class="num"><a href="#${r.id}" data-card="${r.id}">${r.id}</a></td>
-        <td>${escapeHtml(r.name || "")}</td>
+        <td>
+          <div style="display:flex; align-items:center; gap:8px">
+            <img src="${escapeHtml(thumbUrl)}" class="list-thumb" style="width:30px; height:40px" alt="" onerror="this.style.display='none'" />
+            ${escapeHtml(r.name || "")}
+          </div>
+        </td>
         <td${tdClass}>${escapeHtml(value)}</td>
       </tr>
     `;
@@ -1193,6 +1428,7 @@
     const mod = (modsManifest || []).find(m => m.id === modId);
     if (!mod) return;
 
+    currentMod = mod;
     localStorage.setItem("cardsdb:lastModId", mod.id); // lembra escolha :contentReference[oaicite:3]{index=3}
     updateModHint(mod);
 
@@ -1220,7 +1456,6 @@
   setStatus("warn", "Inicializando…", "Carregando lista de mods…");
 
   loadModsManifest()
-    .then((chosen) => loadMod(chosen.id))
     .catch((err) => {
       console.error(err);
       setStatus("error", "Erro", "Não consegui carregar o mods.json.");

@@ -222,6 +222,15 @@ label {
   color: #a7c6ff;
 }
 
+.list-thumb {
+  width: 42px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+}
+
 .item .nm {
   flex: 1
 }
@@ -378,6 +387,14 @@ label {
   box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
 }
 
+.fm-card-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 6px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
 .fm-stats {
   display: flex;
   flex-direction: column;
@@ -443,6 +460,13 @@ label {
 .chip.type {
   color: var(--text);
   background: rgba(255, 255, 255, 0.05);
+}
+
+.type-icon-img {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  opacity: 0.9;
 }
 
 /* GS: look de medalha (borda + gradiente sutil) */
@@ -587,6 +611,106 @@ label {
   color: #fff;
   background: var(--btn2);
   border-color: var(--accent);
+}
+
+/* Avatar do Duelista no Header */
+.duelist-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  object-fit: cover;
+}
+
+.duelist-icon-small {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  vertical-align: middle;
+  border: 1px solid var(--line);
+}
+
+/* --- Custom Select (Dropdown com Imagens) --- */
+.custom-select-container {
+  position: relative;
+  width: 100%;
+}
+
+/* O select nativo fica invisível mas acessível para tabulação se necessário, 
+   ou display:none se controlarmos tudo via JS. Vamos usar display:none no JS. */
+
+.custom-select-trigger {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #080d16;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 6px 10px;
+  cursor: pointer;
+  user-select: none;
+  min-height: 42px;
+  color: var(--text);
+}
+
+.custom-select-trigger:hover {
+  border-color: var(--accent);
+  background: #0c1525;
+}
+
+.custom-select-trigger img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--line);
+}
+
+.custom-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #0e1522;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  margin-top: 6px;
+  max-height: 320px;
+  overflow-y: auto;
+  z-index: 100;
+  display: none;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+}
+
+.custom-options.open {
+  display: block;
+}
+
+.custom-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  transition: background 0.1s;
+}
+
+.custom-option:hover {
+  background: rgba(77, 166, 255, 0.15);
+}
+
+.custom-option.selected {
+  background: var(--btn2);
+  color: #fff;
+}
+
+.custom-option img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--line);
 }
 
 /* Badge de contagem nas subtabs */

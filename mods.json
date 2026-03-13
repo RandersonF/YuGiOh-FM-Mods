@@ -5,7 +5,11 @@
       "name": "Remaster Final",
       "version": "95",
       "path": "./mods/rmf/cards.json",
-      "default": true
+      "default": true,
+      "typeOverrides": {
+        "Sea Serpent": "Divine-Beast",
+        "SeaSerpent": "Divine-Beast"
+      }
     },
     {
       "id": "classic",
