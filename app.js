@@ -290,8 +290,15 @@
     const cardsOn = which === "cards";
     el.tabCards.setAttribute("aria-selected", String(cardsOn));
     el.tabDuelists.setAttribute("aria-selected", String(!cardsOn));
+    el.tabCards.classList.toggle("active", cardsOn);
+    el.tabDuelists.classList.toggle("active", !cardsOn);
     el.panelCards.hidden = !cardsOn;
     el.panelDuelists.hidden = cardsOn;
+
+    const sidebarRight = document.querySelector(".sidebar-right");
+    const appLayout = document.querySelector(".app-layout");
+    if (sidebarRight) sidebarRight.hidden = !cardsOn;
+    if (appLayout) appLayout.classList.toggle("hide-right", !cardsOn);
   }
 
   function pulseOnce(target) {
@@ -433,7 +440,7 @@
       const opt = document.createElement("div");
       opt.className = "custom-option";
       opt.dataset.value = d.id;
-      
+
       const imgUrl = getDuelistImgUrl(d.id);
       opt.innerHTML = `
         <img src="${escapeHtml(imgUrl)}" alt="" onerror="this.style.display='none'" />
@@ -646,6 +653,7 @@
       const row = document.createElement("div");
       const thumbUrl = getCardThumbUrl(it.id, it.name);
       row.className = "item";
+      row.dataset.card = it.id;
       row.innerHTML = `
         <div class="id"><a href="#${it.id}" data-card="${it.id}">${it.id}</a></div>
         <img src="${escapeHtml(thumbUrl)}" class="list-thumb" alt="" loading="lazy" onerror="this.style.display='none'" />
@@ -654,11 +662,9 @@
           <div class="meta">${escapeHtml(getDisplayType(it.type))} • ${escapeHtml(gsSymbol(it.st1))} ${escapeHtml(gsSymbol(it.st2))} • ${escapeHtml(attrName(it.attr) || "-")}</div>
         </div>
       `;
-      row.querySelectorAll("a[data-card]").forEach(a => {
-        a.addEventListener("click", (ev) => {
-          ev.preventDefault();
-          requestDetails(Number(a.dataset.card));
-        });
+      row.addEventListener("click", (ev) => {
+        ev.preventDefault();
+        requestDetails(Number(row.dataset.card));
       });
       el.list.appendChild(row);
     }
@@ -680,8 +686,6 @@
     el.detailMeta.innerHTML = "";
 
     const c = item.card || {};
-    // Debug: ajuda a verificar se o campo 'ComentarioPtBr' está realmente chegando do JSON
-    console.log("Dados da carta selecionada:", c);
 
     const translation = c.ComentarioPtBr || c.ComentarioPT || c.comentarioPtBr || "";
     const atk = item.atk ?? 0;
@@ -1149,7 +1153,7 @@
 
     // Header do Duelista com Avatar
     const avatarUrl = getDuelistImgUrl(payload.id);
-    
+
     el.duelistMeta.innerHTML = `
       <div style="display:flex; align-items:center; gap:12px;">
         <img src="${escapeHtml(avatarUrl)}" class="duelist-avatar" alt="" onerror="this.style.display='none'" />

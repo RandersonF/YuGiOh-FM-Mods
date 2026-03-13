@@ -1,173 +1,164 @@
 <!doctype html>
 <html lang="pt-BR">
-
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Yu-Gi-Oh! FM Mods</title>
-
-  <!-- Evita request automático em /favicon.ico -->
   <link rel="icon" href="data:," />
-
-  <link rel="stylesheet" href="./style.css?v=2" />
-  <script src="./app.js?v=2" defer></script>
+  <link rel="stylesheet" href="./style.css?v=3" />
+  <script src="./app.js?v=3" defer></script>
 </head>
-
 <body>
-  <header>
-    <div class="wrap" style="text-align:center">
-      <h1>Yu-Gi-Oh! FM Mods</h1>
-      <!--<div class="sub">Carrega o <b>cards.json</b>, filtra e inspeciona cartas. Aba “Duelistas” mostra deck e drops por
-        ranking.</div>-->
-    </div>
-  </header>
+  <!-- Background da aplicação (estilo fárao/hieroglifos) -->
+  <div class="app-bg"></div>
 
-  <main class="wrap">
-    <div class="row">
-      <div class="field" style="min-width:320px">
-        <label>Mod</label>
-        <select id="modPick" disabled>
-          <option value="">Carregando mods…</option>
-        </select>
-        <!--<div class="small" id="modHint"></div>-->
+  <div class="app-layout">
+    <!-- SIDEBAR ESQUERDA -->
+    <aside class="sidebar-left">
+      <div class="brand">
+        <div class="brand-logo">
+          <img src="favicon.jpg" alt="Logo" class="logo-img">
+        </div>
+        <h1>Forbidden Memories<br><span class="brand-db">DATABASE</span></h1>
       </div>
 
-      <!--<button id="btnClearCache" class="btn" type="button">Limpar cache</button>-->
-
-      <div class="spacer"></div>
-
-      <div class="status" style="min-width:320px">
-        <span id="statusDot" class="dot warn"></span>
-        <div>
-          <b id="statusTitle">Inicializando…</b><br />
-          <span id="statusText" class="msg">Carregando lista de mods…</span>
+      <nav class="nav-menu">
+        <a href="#" class="nav-item"><i class="icon"></i> INÍCIO</a>
+        
+        <div class="nav-group">BANCO DE CARTAS</div>
+        <!-- tabCards and tabDuelists moved to nav-items -->
+        <button id="tabCards" class="nav-item active" role="tab" aria-selected="true">Cartas Base</button>
+        <button id="tabDuelists" class="nav-item" role="tab" aria-selected="false">Duelistas</button>
+      </nav>
+      
+      <div class="sidebar-bottom">
+        <div class="field mod-field">
+          <label>Mod Atual</label>
+          <select id="modPick" disabled>
+            <option value="">Carregando mods…</option>
+          </select>
         </div>
       </div>
-    </div>
+    </aside>
 
-
-    <div class="tabs" role="tablist" aria-label="Navegação">
-      <button id="tabCards" class="tab" role="tab" aria-selected="true">Cartas</button>
-      <button id="tabDuelists" class="tab" role="tab" aria-selected="false">Duelistas</button>
-    </div>
-
-    <!-- PANEL: CARTAS -->
-    <section id="panelCards">
-      <div class="card">
-        <div class="row">
-          <div class="field" style="min-width:260px">
-            <label>Nome (contém)</label>
-            <input id="qName" type="text" placeholder="ex.: battleguard" />
-          </div>
-
-          <div class="field" style="min-width:140px">
-            <label>ID</label>
-            <input id="qId" type="number" placeholder="ex.: 12" />
-          </div>
-
-          <div class="field">
-            <label>Tipo</label>
-            <select id="qType"></select>
-          </div>
-
-          <div class="field">
-            <label>Guardian Star</label>
-            <select id="qStar"></select>
-          </div>
-
-          <div class="field">
-            <label>Atributo</label>
-            <select id="qAttr"></select>
-          </div>
-
-          <div class="field">
-            <label>Duelista (drop)</label>
-            <select id="qDuelist"></select>
-          </div>
-
-          <div class="field">
-            <label>Rank (drop)</label>
-            <select id="qDuelRank">
-              <option value="">Todos</option>
-              <option value="0">Deck</option>
-              <option value="1">Z POW</option>
-              <option value="2">S POW</option>
-              <option value="3">S TEC</option>
-            </select>
+    <!-- ÁREA CENTRAL -->
+    <main class="main-content">
+      <header class="top-header">
+        <div class="search-wrap">
+          <input id="qName" type="text" placeholder="Pesquisar cartas, mods, drops..." />
+        </div>
+        <div class="status-wrap">
+          <span id="statusDot" class="dot warn"></span>
+          <div class="status-info">
+            <b id="statusTitle">Inicializando…</b>
+            <span id="statusText" class="msg">Carregando…</span>
           </div>
         </div>
-        <div class="row" style="margin-top:10px">
-          <div class="small" id="resultMeta">0 resultados</div>
-          <div class="spacer"></div>
-          <button id="btnClear" class="btn" type="button" disabled>Limpar filtros</button>
-        </div>
+      </header>
+
+      <div class="content-header">
+        <h2>BANCO DE CARTAS - FM & MODS <button class="btn-gold">GOLD</button></h2>
       </div>
 
-      <div class="grid" style="margin-top:12px">
-        <div class="card">
-          <div class="sectionTitle">Lista (clique para detalhes)</div>
-          <div id="list" class="list"></div>
-        </div>
-
-        <div class="card">
-          <div class="sectionTitle">Detalhes</div>
-          <div id="detailMeta" class="small">Selecione uma carta na lista.</div>
-          <div id="details"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- PANEL: DUELISTAS -->
-    <section id="panelDuelists" hidden>
-      <div class="card">
-        <div class="row">
-          <div class="field" style="min-width:360px">
-            <label>Escolha o duelista</label>
-            <div id="duelistPickContainer" class="custom-select-container">
-              <select id="duelistPick"></select>
+      <!-- PANEL: CARTAS -->
+      <section id="panelCards">
+        <div class="filters-card">
+          <div class="filters-title">Filtros avançados:</div>
+          <div class="filters-row">
+            <div class="field" style="width: 80px;">
+              <label>ID</label>
+              <input id="qId" type="number" placeholder="Ex: 1" />
+            </div>
+            <div class="field">
+              <label>Tipo</label>
+              <select id="qType"></select>
+            </div>
+            <div class="field">
+              <label>Atributo</label>
+              <select id="qAttr"></select>
+            </div>
+            <div class="field">
+              <label>Nível / Estrelas</label>
+              <select id="qStar"></select>
+            </div>
+            <div class="field">
+              <label>Origem (Drop)</label>
+              <select id="qDuelist"></select>
+            </div>
+            <div class="field">
+              <label>Rank (Drop)</label>
+              <select id="qDuelRank">
+                <option value="">Todos</option>
+                <option value="0">Deck</option>
+                <option value="1">Z POW</option>
+                <option value="2">S POW</option>
+                <option value="3">S TEC</option>
+              </select>
+            </div>
+            <div class="field align-bottom">
+              <button id="btnClear" class="btn" type="button" disabled>LIMPAR</button>
             </div>
           </div>
+        </div>
 
-          <label style="display:none; align-items:center; gap:8px; margin-top:18px; user-select:none;">
+        <div class="results-header">
+          <div class="small" id="resultMeta">0 resultados</div>
+        </div>
+
+        <div id="list" class="grid-list"></div>
+      </section>
+
+      <!-- PANEL: DUELISTAS -->
+      <section id="panelDuelists" hidden>
+        <div class="filters-card">
+          <div class="filters-row">
+            <div class="field" style="flex:1; max-width: 400px;">
+              <label>Escolha o duelista</label>
+              <div id="duelistPickContainer" class="custom-select-container">
+                <select id="duelistPick"></select>
+              </div>
+            </div>
+            
+            <div id="duelistMeta" class="small align-bottom" style="margin-left:auto; line-height:38px;">Selecione um duelista.</div>
+          </div>
+          <label style="display:none; align-items:center; gap:8px; margin-top:10px; user-select:none;">
             <input id="duelistHideZero" type="checkbox" />
-            <span>Ocultar linhas sem chance (0 / vazio)</span>
+            <span>Ocultar linhas sem chance</span>
           </label>
-
-          <div class="spacer"></div>
-
-          <div id="duelistMeta" class="small">Selecione um duelista.</div>
         </div>
-      </div>
-      <div class="card" style="margin-top:12px">
-        <div class="sectionTitle">Cartas do duelista (deck e drops)</div>
-        <div class="subtabs" role="tablist" aria-label="Filtro de cartas do duelista">
-          <button class="subtab active" role="tab" aria-selected="true" data-duel-tab="all" id="duelTabAll"><span
-              class="label">Tudo</span><span class="badge" aria-hidden="true">0</span></button>
-          <button class="subtab" role="tab" aria-selected="false" data-duel-tab="deck" id="duelTabDeck"><span
-              class="label">Deck</span><span class="badge" aria-hidden="true">0</span></button>
-          <button class="subtab" role="tab" aria-selected="false" data-duel-tab="zpow" id="duelTabZ"><span
-              class="label">Z POW</span><span class="badge" aria-hidden="true">0</span></button>
-          <button class="subtab" role="tab" aria-selected="false" data-duel-tab="spow" id="duelTabSP"><span
-              class="label">S POW</span><span class="badge" aria-hidden="true">0</span></button>
-          <button class="subtab" role="tab" aria-selected="false" data-duel-tab="stec" id="duelTabST"><span
-              class="label">S TEC</span><span class="badge" aria-hidden="true">0</span></button>
+
+        <div class="card" style="margin-top:20px; background:transparent; box-shadow:none;">
+          <div class="subtabs" role="tablist" aria-label="Filtro de cartas do duelista">
+            <button class="subtab active" role="tab" aria-selected="true" data-duel-tab="all" id="duelTabAll"><span class="label">Tudo</span><span class="badge" aria-hidden="true">0</span></button>
+            <button class="subtab" role="tab" aria-selected="false" data-duel-tab="deck" id="duelTabDeck"><span class="label">Deck</span><span class="badge" aria-hidden="true">0</span></button>
+            <button class="subtab" role="tab" aria-selected="false" data-duel-tab="zpow" id="duelTabZ"><span class="label">Z POW</span><span class="badge" aria-hidden="true">0</span></button>
+            <button class="subtab" role="tab" aria-selected="false" data-duel-tab="spow" id="duelTabSP"><span class="label">S POW</span><span class="badge" aria-hidden="true">0</span></button>
+            <button class="subtab" role="tab" aria-selected="false" data-duel-tab="stec" id="duelTabST"><span class="label">S TEC</span><span class="badge" aria-hidden="true">0</span></button>
+          </div>
+          <div class="table-container">
+            <table class="table">
+              <thead id="duelistThead">
+                <tr>
+                  <th style="width:70px">ID</th>
+                  <th>CARTA</th>
+                  <th style="width:100px">DECK</th>
+                  <th style="width:100px">Z POW</th>
+                  <th style="width:100px">S POW</th>
+                  <th style="width:100px">S TEC</th>
+                </tr>
+              </thead>
+              <tbody id="duelistTbody"></tbody>
+            </table>
+          </div>
         </div>
-        <table class="table">
-          <thead id="duelistThead">
-            <tr>
-              <th style="width:90px">ID</th>
-              <th>Carta</th>
-              <th style="width:120px">Deck</th>
-              <th style="width:110px">Z POW</th>
-              <th style="width:110px">S POW</th>
-              <th style="width:110px">S TEC</th>
-            </tr>
-          </thead>
-          <tbody id="duelistTbody"></tbody>
-        </table>
-      </div>
-    </section>
-  </main>
+      </section>
+    </main>
+
+    <!-- SIDEBAR DIREITA -->
+    <aside class="sidebar-right">
+      <div id="detailMeta" class="small" style="display:none">Selecione uma carta na lista.</div>
+      <div id="details" class="details-container"></div>
+    </aside>
+  </div>
 </body>
-
 </html>
