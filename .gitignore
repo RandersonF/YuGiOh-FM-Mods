@@ -6,6 +6,9 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 
+# Visual Studio
+.vs/
+
 # ===== Logs =====
 *.log
 npm-debug.log*
