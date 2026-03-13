@@ -548,6 +548,10 @@
     if (!mod) return;
 
     currentMod = mod;
+    isReady = false;
+    selectedCardId = null;
+    datasetTotalCards = null;
+    lastDuelistPayload = null;
     localStorage.setItem(LS_LAST_MOD, mod.id); // :contentReference[oaicite:11]{index=11}
     setModHint(mod);
 
@@ -556,7 +560,7 @@
     setStatus("warn", "Carregando mod…", `${mod.name}`);
 
     // 1) tenta cache primeiro
-    const restored = await restoreCachedModIfAny(mod.id);
+    const restored = await restoreCachedModIfAny(mod);
     if (restored) return;
 
     // 2) senão, baixa e salva no cache
@@ -1245,6 +1249,16 @@
     });
   }
 
+  async function idbDel(key) {
+    const db = await openDb();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE, "readwrite");
+      tx.objectStore(STORE).delete(key);
+      tx.oncomplete = () => { db.close(); resolve(true); };
+      tx.onerror = () => { db.close(); reject(tx.error); };
+    });
+  }
+
   el.btnClearCache?.addEventListener("click", async () => {
     try {
       const db = await openDb();
@@ -1277,12 +1291,21 @@
     }
   }
 
-  async function restoreCachedModIfAny(modId) {
+  async function restoreCachedModIfAny(mod) {
     try {
-      const cached = await idbGet(modKey(modId));
+      const cached = await idbGet(modKey(mod.id));
       if (!cached?.blob) return false;
+      const cachedVersion = String(cached.meta?.version || "");
+      const cachedPath = String(cached.meta?.path || "");
+      const currentVersion = String(mod.version || "");
+      const currentPath = String(mod.path || "");
 
-      setStatus("warn", "Restaurando cache…", `Carregando mod ${modId} salvo no navegador.`);
+      if (cachedVersion !== currentVersion || cachedPath !== currentPath) {
+        await idbDel(modKey(mod.id));
+        return false;
+      }
+
+      setStatus("warn", "Restaurando cache…", `Carregando mod ${mod.id} salvo no navegador.`);
       const buf = await cached.blob.arrayBuffer();
       ensureWorker();
       worker.postMessage({ cmd: "load", buffer: buf }, [buf]);
@@ -1297,16 +1320,6 @@
   // ---- Events ----
   el.tabCards.addEventListener("click", () => setTab("cards"));
   el.tabDuelists.addEventListener("click", () => setTab("duelists"));
-
-  el.modPick.addEventListener("change", () => {
-    const id = el.modPick.value;
-    if (!id) return;
-    loadMod(id).catch(err => {
-      console.error(err);
-      setStatus("error", "Erro", "Não consegui carregar o mod selecionado.");
-      setControlsEnabled(true);
-    });
-  });
 
   el.modPick.addEventListener("change", () => {
     const id = el.modPick.value;
@@ -1331,16 +1344,6 @@
     selectedCardId = null;
     runQuery();
   });
-
-  el.btnClearCache?.addEventListener("click", async () => {
-    try {
-      await idbDel(KEY_LAST);
-      setStatus("warn", "Cache limpo", "O cache foi removido. Selecione um JSON para recarregar.");
-    } catch (e) {
-      setStatus("bad", "Falha ao limpar cache", String(e?.message || e));
-    }
-  });
-
 
   const runQueryNameDebounced = debounce(runQuery, 160);
   el.qName.addEventListener("input", runQueryNameDebounced);
@@ -1390,4 +1393,20 @@
       setDuelistTab(tabButtons[next].dataset.duelTab);
     });
   }
+
+  async function initApp() {
+    try {
+      setTab("cards");
+      setControlsEnabled(false);
+
+      const initialMod = await loadModsManifest();
+      await loadMod(initialMod.id);
+    } catch (err) {
+      console.error(err);
+      setStatus("error", "Erro", "Não consegui carregar a lista de mods.");
+      el.modPick.disabled = false;
+    }
+  }
+
+  initApp();
 })();
