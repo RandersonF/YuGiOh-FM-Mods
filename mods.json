@@ -1,9 +1,9 @@
 {
   "mods": [
     {
-      "id": "rmf",
+      "id": "2",
       "name": "Remaster",
-      "version": "02",
+      "version": "Final",
       "path": "./mods/rmf/cards.json",
       "default": true,
       "typeOverrides": {
@@ -12,10 +12,22 @@
       }
     },
     {
-      "id": "classic",
-      "name": "FM Original",
-      "version": "1",
+      "id": "1",
+      "name": "Yu-Gi-Oh! Forbidden Memories",
+      "version": "Original",
       "path": "./mods/classic/cards.json"
+    },
+	{
+      "id": "3",
+      "name": "CLT Memories",
+      "version": "Free",
+      "path": "./mods/clt/cards.json"
+    },
+	{
+      "id": "4",
+      "name": "Light MOD",
+      "version": "x15",
+      "path": "./mods/lightMod/cards.json"
     }
   ]
 }
